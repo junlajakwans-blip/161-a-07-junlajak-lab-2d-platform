@@ -1,3 +1,4 @@
+using NUnit.Framework;
 using UnityEngine;
 
 public class Character : MonoBehaviour
@@ -18,10 +19,18 @@ public class Character : MonoBehaviour
     //Behavior
     public void TakeDamage(int damage)
     {
+        Health -= damage;
+        Debug.Log($"{this.name} took {damage} damage, remaining health: {Health}");
+        IsDead();
     }
     
-    //public bool IsDead()
-    //{
-        
-    //}
+    public bool IsDead()
+    {
+        if (Health <= 0)
+        {
+            Destroy(this.gameObject);
+            return true;
+        }
+        else { return false; }
+    }
 }
