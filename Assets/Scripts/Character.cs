@@ -15,6 +15,13 @@ public class Character : MonoBehaviour
     //initialize character
     public void Initialize(int startHealth)
     {
+        // Set starting health
+        Health = startHealth;
+        Debug.Log($"{this.name} initialized with {Health} health.");
+
+        // Get components
+        anim = GetComponent<Animator>();
+        rb = GetComponent<Rigidbody2D>();
     }
     //Behavior
     public void TakeDamage(int damage)
