@@ -6,8 +6,9 @@ public class Player : Character
     // Player-specific implementation
     void Start()
     {
-        base.Initialize(100); //set Player's Health
+        base.Initialize(100); //set Player's Health to 100
     }
+    
     public void OnHitWith(Enemy enemy)
     {
         TakeDamage(enemy.DamageHit);

@@ -11,20 +11,19 @@ public class Ant : Enemy
         base.Initialize(15); // Initialize with 15 health
         DamageHit = 10;
         velocity = new Vector2(-1.0f, 0.0f); // Default velocity
+
     }
 
     public override void Behavior()
     {
         rb.MovePosition(rb.position + velocity * Time.fixedDeltaTime);
 
-        if (transform.position.x <= movePoints[0].position.x)
+        if (velocity.x < 0 && transform.position.x <= movePoints[0].position.x)
         {
-            velocity = new Vector2(1.0f, 0.0f);
             Flip();
         }
-        else if (transform.position.x >= movePoints[1].position.x)
+        else if (velocity.x > 0 && transform.position.x >= movePoints[1].position.x)
         {
-            velocity = new Vector2(-1.0f, 0.0f);
             Flip();
         }
     }
