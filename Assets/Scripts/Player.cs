@@ -3,13 +3,10 @@ using UnityEngine;
 
 public class Player : Character, IShootable
 {
-    //implement IShootable interface   
-    [field: SerializeField] public GameObject bullet { get; set; }
+    [field: SerializeField] public GameObject Bullet { get; set; }
     [field: SerializeField] public Transform ShootPoint { get; set; }
     public float ReloadTime { get; set; }
     public float WaitTime { get; set; }
-
-
 
     // Player-specific implementation
     void Start()
@@ -21,7 +18,25 @@ public class Player : Character, IShootable
 
     public void FixedUpdate() //loop  every 0.02 seconds
     {
-        WaitTime += Time.fixedDeltaTime; // = 0 +0 .02 + 0.02 ...
+        //Debug.Log("Fixed Update " + Time.fixedDeltaTime);
+        WaitTime += Time.fixedDeltaTime; // = 0 + 0.02 + 0.02 ... 
+    }
+
+    public void Update()
+    {
+        Shoot();
+    }
+
+    public void Shoot()
+    {
+        if (Input.GetButtonDown("Fire1") && WaitTime >= ReloadTime)
+        {
+            var bullet = Instantiate(Bullet, ShootPoint.position, Quaternion.identity);
+            Banana banana = bullet.GetComponent<Banana>();
+            if (banana != null)
+               banana.InitWeapon(20, this); //set banana damage to 20
+            WaitTime = 0.0f; //reset wait time
+        }
     }
 
     public void OnHitWith(Enemy enemy)
@@ -34,8 +49,8 @@ public class Player : Character, IShootable
         Enemy enemy = collision.gameObject.GetComponent<Enemy>();
         if (enemy != null)
         {
-            Debug.Log($"{this.name} Hit with {enemy.name}!");
             OnHitWith(enemy);
+            Debug.Log($"{this.name} Hit with {enemy.name}!");
         }
     }   
     

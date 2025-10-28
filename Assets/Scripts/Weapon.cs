@@ -20,7 +20,6 @@ public abstract class Weapon : MonoBehaviour
         if (value > 0)
             return 1; // Right
         else return -1; // Left
-        
     }
 
     public void OnTriggerEnter2D(Collider2D other) // Detect collision with Character
@@ -28,7 +27,7 @@ public abstract class Weapon : MonoBehaviour
         Character character = other.GetComponent<Character>(); // Check if the collided object has a Character component
         if (character != null)
         {
-            OnHitWith(character); // Call OnHitWith when colliding with a Character
+            OnHitWith(character); // Call OnHitWith when colliding with a Character 
             Destroy(this.gameObject, 5f); // Destroy the weapon after hitting a character (after 5 seconds)
             //Destroy(this.gameObject); // Immediate destroy
         }
