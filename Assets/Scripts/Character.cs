@@ -24,41 +24,43 @@ public class Character : MonoBehaviour
     }
     protected Animator anim;
     protected Rigidbody2D rb;
-    
 
-    protected virtual void CreateHealthBar()
+
+//create HealthBar
+    protected virtual void CreateHealthBar() 
     {
-        // 🔹รอจนกว่า Manager จะพร้อม
+        // Wait for HealthBarManager to be ready
         if (HealthBarManager.Instance == null)
         {
             Debug.LogWarning("HealthBarManager not ready yet.");
             return;
         }
 
-        // 🔹กัน spawn ซ้ำ
+        // Avoid duplicate HealthBars
         if (healthBarCanvas != null) return;
 
-        // 🔹สร้าง HealthBar
+        // Create HealthBar
         GameObject hb = HealthBarManager.Instance.GetHealthBar();
         hb.transform.position = transform.position + Vector3.up * 1.2f;
 
-        // 🔹ตั้ง follow target
+        // Set up FollowHead component
         FollowHead follow = hb.GetComponent<FollowHead>();
         if (follow == null)
             follow = hb.AddComponent<FollowHead>();
         follow.target = transform;
         follow.offset = new Vector3(0, 1.2f, 0);
 
-        // 🔹อ้างอิง UI ภายใน
+        // Get references to Canvas and Fill Image
         healthBarCanvas = hb.GetComponent<Canvas>();
         healthBarFillImage = hb.transform.Find("Fill").GetComponent<Image>();
 
-        // 🔹บังคับให้ Canvas เป็น World Space
+        // Ensure Canvas is in World Space
         if (healthBarCanvas.renderMode != RenderMode.WorldSpace)
             healthBarCanvas.renderMode = RenderMode.WorldSpace;
 
         UpdateHealthBar();
     }
+
 
     //initialize character
     public void Initialize(int startHealth)
@@ -71,12 +73,12 @@ public class Character : MonoBehaviour
         anim = GetComponent<Animator>();
         rb = GetComponent<Rigidbody2D>();
 
-        CreateHealthBar();
+        CreateHealthBar(); // Call CreateHealthBar method
         Debug.Log($"{this.name} initialized with {Health} health.");
 
     }
 
-    //Behavior
+#region Damage and Death
     public void TakeDamage(int damage)
     {
         Health -= damage;
@@ -88,17 +90,19 @@ public class Character : MonoBehaviour
     {
         if (Health <= 0)
         {
-            if (healthBarCanvas != null)
+            if (healthBarCanvas != null) // Return HealthBar to pool
                 HealthBarManager.Instance.ReturnHealthBar(healthBarCanvas.gameObject);
-                healthBarCanvas = null;
+            healthBarCanvas = null; // Clear reference
 
             Destroy(gameObject);
             return true;
         }
         else { return false; }
     }
-    
-    protected virtual void UpdateHealthBar()
+#endregion
+
+#region Update HealthBar
+    protected virtual void UpdateHealthBar() // Update HealthBar method realtime
     {
         if (healthBarFillImage != null)
         {
@@ -106,4 +110,5 @@ public class Character : MonoBehaviour
             healthBarFillImage.fillAmount = Mathf.Clamp01(fillAmount);
         }
     }
+#endregion
 }
